@@ -1,24 +1,114 @@
 import React, { useState } from "react";
-import { Tv } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import victoryIcon from "@/assets/victory.svg";
 import loginImg from "@/assets/login2.png";
+import { toast } from "sonner";
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
+import { apiClient } from "@/lib/api-client";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+
   const [signupData, setSignupData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const handleLogin = () => {};
-  const handleSignup = () => {};
+  const navigate = useNavigate();
+
+  const validateSignup = () => {
+    if (!signupData.email.length) {
+      toast.error("Email is required.");
+      return false;
+    }
+    if (!signupData.password.length) {
+      toast.error("Password is required.");
+      return false;
+    }
+    if (
+      !signupData.confirmPassword.length ||
+      signupData.confirmPassword !== signupData.password
+    ) {
+      toast.error("Confirm Password and Password must be same.");
+      return false;
+    }
+    return true;
+  };
+
+  const validateLogin = () => {
+    if (!loginData.email.length) {
+      toast.error("Email is required.");
+      return false;
+    }
+    if (!loginData.password.length) {
+      toast.error("Password is required.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleLogin = async () => {
+    if (validateLogin()) {
+      try {
+        console.log(loginData);
+        const response = await apiClient.post(
+          LOGIN_ROUTE,
+          {
+            email: loginData.email,
+            password: loginData.password,
+          },
+          { withCredentials: true } // for storing jwt cookie
+        );
+        if (response.data.user._id) {
+          if (response.data.user.profileSetup) {
+            navigate("/chat");
+          } else {
+            navigate("/profile");
+          }
+        }
+        // if(response.data.)
+        console.log({ response });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response.data);
+        }
+      }
+    }
+  };
+
+  const handleSignup = async () => {
+    if (validateSignup()) {
+      try {
+        console.log(signupData);
+        const response = await apiClient.post(
+          SIGNUP_ROUTE,
+          {
+            email: signupData.email,
+            password: signupData.password,
+          },
+          { withCredentials: true } // for storing jwt cookie
+        );
+
+        if (!response.data.user.profileSetup) {
+          navigate("/profile");
+        }
+        console.log({ response });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response.data);
+        }
+      }
+    }
+  };
+
   return (
     <div className="h-[100vh] w-[100vw] flex justify-center items-center ">
       <div className="h-[80vh] w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] bg-white border-2 border-white shadow-2xl rounded-3xl grid xl:grid-cols-2 text-opacity-90">
@@ -26,16 +116,21 @@ const AuthPage = () => {
           {/* welcome msg */}
           <div className="flex flex-col items-center justify-center ">
             <div className="flex items-center justify-center gap-2">
-              <h1 className="text-5xl font-bold md:text-6xl">Welcome</h1>
-              <img src={victoryIcon} className="h-[100px]" />
+              <h1 className="text-4xl sm:text-5xl font-bold md:text-6xl">
+                Welcome
+              </h1>
+              <img
+                src={victoryIcon}
+                className="h-[70px] sm:h-[100px] w-[70px] sm:w-[100px]"
+              />
             </div>
-            <p className="font-medium text-center">
+            <p className="text-sm sm:text-base font-medium text-center px-5">
               Fill in the details to get started with best chat app!
             </p>
           </div>
           {/* login / signup   tabs */}
           <div className="flex items-center justify-center w-full">
-            <Tabs className="w-3/4">
+            <Tabs className="w-3/4" defaultValue="login">
               <TabsList className="bg-transparent w-full rounded-none">
                 <TabsTrigger
                   value="login"
