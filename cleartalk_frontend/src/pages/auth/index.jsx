@@ -9,6 +9,7 @@ import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
 import { apiClient } from "@/lib/api-client";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 const AuthPage = () => {
   const [loginData, setLoginData] = useState({
@@ -23,6 +24,7 @@ const AuthPage = () => {
   });
 
   const navigate = useNavigate();
+  const { setUserInfo } = useAppStore();
 
   const validateSignup = () => {
     if (!signupData.email.length) {
@@ -67,14 +69,15 @@ const AuthPage = () => {
           },
           { withCredentials: true } // for storing jwt cookie
         );
-        if (response.data.user._id) {
+        console.log({ response });
+        if (response.data.user.id) {
+          setUserInfo(response.data.user);
           if (response.data.user.profileSetup) {
             navigate("/chat");
           } else {
             navigate("/profile");
           }
         }
-        // if(response.data.)
         console.log({ response });
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -97,7 +100,8 @@ const AuthPage = () => {
           { withCredentials: true } // for storing jwt cookie
         );
 
-        if (!response.data.user.profileSetup) {
+        if (response.status === 201) {
+          setUserInfo(response.data.user);
           navigate("/profile");
         }
         console.log({ response });
