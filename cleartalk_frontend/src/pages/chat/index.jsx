@@ -1,9 +1,21 @@
-import React from 'react'
+import { useAppStore } from "@/store";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ChatPage = () => {
-  return (
-    <div>ChatPage</div>
-  )
-}
+  const { userInfo } = useAppStore();
 
-export default ChatPage
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log(userInfo);
+    if (!userInfo?.profileSetup) {
+      toast.error("Please setup your profile to continue.");
+      navigate("/profile");
+    }
+  }, [userInfo, navigate]);
+
+  return <div>ChatPage</div>;
+};
+
+export default ChatPage;
