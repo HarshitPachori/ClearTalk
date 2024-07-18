@@ -1,11 +1,15 @@
 import { useAppStore } from "@/store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Camera, Plus, Trash } from "lucide-react";
+import { ArrowLeft, Camera, Trash } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { colors, getColor } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { UPDATE_USER_INFO_ROUTE } from "@/utils/constants";
+import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 
 const ProfilePage = () => {
   const { userInfo, setUserInfo } = useAppStore();
@@ -20,13 +24,72 @@ const ProfilePage = () => {
     selectedColor: 0,
   });
 
-  const saveChanges = async () => {};
+  const validateProfile = () => {
+    if (!profileData.firstName.length) {
+      toast.error("FirstName is required.");
+      return false;
+    }
+    if (!profileData.lastName.length) {
+      toast.error("LastName is required.");
+      return false;
+    }
+    return true;
+  };
 
+  const saveChanges = async () => {
+    if (validateProfile()) {
+      try {
+        console.log(profileData);
+        const response = await apiClient.put(
+          UPDATE_USER_INFO_ROUTE,
+          {
+            firstName: profileData.firstName,
+            lastName: profileData.lastName,
+            color: profileData.selectedColor,
+          },
+          { withCredentials: true } // for storing jwt cookie
+        );
+        console.log({ response });
+        if (response.status === 200 && response.data.user.id) {
+          setUserInfo(response.data.user);
+          toast.success("Profile updated successfully.");
+          navigate("/chat");
+        }
+        console.log({ response });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response.data);
+        }
+      }
+    }
+  };
+
+  const handleNavigateBackBtn = () => {
+    if (userInfo.profileSetup) {
+      navigate("/chat");
+    } else {
+      toast.error("Please setup your profile first.");
+    }
+  };
+
+  useEffect(() => {
+    if (userInfo.profileSetup) {
+      setProfileData({
+        ...profileData,
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        selectedColor: userInfo.color,
+      });
+    }
+  }, [userInfo]);
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex flex-col items-center justify-center gap-10">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
         <div className="">
-          <ArrowLeft className="text-4xl lg:text-6xl text-white/90 cursor-pointer" />
+          <ArrowLeft
+            className="text-4xl lg:text-6xl text-white/90 cursor-pointer"
+            onClick={handleNavigateBackBtn}
+          />
         </div>
         <div className="grid md:grid-cols-2 justify-center gap-5 md:gap-0">
           <div

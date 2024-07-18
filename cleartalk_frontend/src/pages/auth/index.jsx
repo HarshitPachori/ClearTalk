@@ -72,6 +72,7 @@ const AuthPage = () => {
         console.log({ response });
         if (response.data.user.id) {
           setUserInfo(response.data.user);
+          toast.success("Login successfully.");
           if (response.data.user.profileSetup) {
             navigate("/chat");
           } else {
@@ -102,6 +103,7 @@ const AuthPage = () => {
 
         if (response.status === 201) {
           setUserInfo(response.data.user);
+          toast.success("Registered successfully.");
           navigate("/profile");
         }
         console.log({ response });
