@@ -2,8 +2,8 @@ import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 
-const jwtTokenValidity = 3 * 24 * 60 * 60 * 1000;
-
+const cookieValidity = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+const jwtTokenValidity = 3 * 24 * 60 * 60;
 const createToken = (email, userId) => {
   return jwt.sign({ email, userId }, process.env.JWT_SECRET_KEY, {
     expiresIn: jwtTokenValidity,
@@ -23,7 +23,7 @@ export const signup = async (req, res, next) => {
     }
     const user = await User.create({ email, password });
     res.cookie("jwt", createToken(email, user._id), {
-      maxAge: jwtTokenValidity,
+      expires: cookieValidity,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
@@ -57,7 +57,7 @@ export const login = async (req, res, next) => {
     }
 
     res.cookie("jwt", createToken(email, user._id), {
-      maxAge: jwtTokenValidity,
+      expires: cookieValidity,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
