@@ -2,7 +2,7 @@ import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 
-const jwtTokenValidity = 3 * 24 * 60 * 60;
+const jwtTokenValidity = 3 * 24 * 60 * 60 * 1000;
 
 const createToken = (email, userId) => {
   return jwt.sign({ email, userId }, process.env.JWT_SECRET_KEY, {
@@ -24,8 +24,8 @@ export const signup = async (req, res, next) => {
     const user = await User.create({ email, password });
     res.cookie("jwt", createToken(email, user._id), {
       maxAge: jwtTokenValidity,
-      secure: true,
-      sameSite: "None",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     });
     return res.status(201).json({
       user: {
@@ -58,8 +58,8 @@ export const login = async (req, res, next) => {
 
     res.cookie("jwt", createToken(email, user._id), {
       maxAge: jwtTokenValidity,
-      secure: true,
-      sameSite: "None",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     });
     return res.status(200).json({
       user: {
@@ -77,5 +77,3 @@ export const login = async (req, res, next) => {
     return res.status(500).send("Internal Server Error");
   }
 };
-
-
