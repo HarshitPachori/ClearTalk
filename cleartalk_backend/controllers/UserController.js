@@ -1,4 +1,4 @@
-import User from "../models/UserModel";
+import User from "../models/UserModel.js";
 
 export const getUserInfo = async (req, res, next) => {
   try {
@@ -28,14 +28,14 @@ export const getUserInfo = async (req, res, next) => {
 export const updateUserInfo = async (req, res, next) => {
   try {
     const { firstName, lastName, color } = req.body;
-    if (!firstName || !lastName || !color) {
+    if (!firstName || !lastName || color < 0) {
       return res
         .status(400)
         .send("FirstName and LastName and Color are required");
     }
     const userData = await User.findByIdAndUpdate(
       req.userId,
-      { firstName, lastName, image, profileSetup: true },
+      { firstName, lastName, color, profileSetup: true },
       { new: true, runValidators: true }
     );
     if (!userData) {
