@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Camera, Trash } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -7,12 +7,18 @@ import { colors, getColor } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { UPDATE_USER_INFO_ROUTE } from "@/utils/constants";
+import {
+  BASE_URL,
+  DELETE_USER_PROFILE_PIC_ROUTE,
+  UPDATE_USER_INFO_ROUTE,
+  UPDATE_USER_PROFILE_PIC_ROUTE,
+} from "@/utils/constants";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 
 const ProfilePage = () => {
   const { userInfo, setUserInfo } = useAppStore();
+  const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -72,6 +78,54 @@ const ProfilePage = () => {
     }
   };
 
+  const handleFileInputClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = async (event) => {
+    try {
+      const file = event.target.files[0];
+      console.log({ file });
+      if (file) {
+        const formData = new FormData();
+        formData.append("profile-image", file);
+        const response = await apiClient.put(
+          UPDATE_USER_PROFILE_PIC_ROUTE,
+          formData,
+          { withCredentials: true }
+        );
+        if (response.status === 200 && response.data.image) {
+          setUserInfo({ ...userInfo, image: response.data.image });
+          toast.success("Profile pic updated successfully.");
+        }
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response.data);
+      }
+    }
+  };
+
+  const handleImageDelete = async () => {
+    try {
+      const response = await apiClient.delete(
+        DELETE_USER_PROFILE_PIC_ROUTE,
+        { withCredentials: true } // for storing jwt cookie
+      );
+      console.log({ response });
+      if (response.status === 200) {
+        setUserInfo({ ...userInfo, image: null });
+        toast.success(response.data);
+        setProfileData({ ...profileData, image: null });
+      }
+      console.log({ response });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response.data);
+      }
+    }
+  };
+
   useEffect(() => {
     if (userInfo.profileSetup) {
       setProfileData({
@@ -79,9 +133,11 @@ const ProfilePage = () => {
         firstName: userInfo.firstName,
         lastName: userInfo.lastName,
         selectedColor: userInfo.color,
+        image: userInfo.image ? `${BASE_URL}/${userInfo.image}` : null,
       });
     }
   }, [userInfo]);
+
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex flex-col items-center justify-center gap-10">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
@@ -121,7 +177,12 @@ const ProfilePage = () => {
               )}
             </Avatar>
             {profileData.hovered && (
-              <div className="absolute  flex items-center justify-center bg-black/50 ring-fuchsia-50 cursor-pointer rounded-full h-36 w-36 md:h-48 md:w-48">
+              <div
+                className="absolute  flex items-center justify-center bg-black/50 ring-fuchsia-50 cursor-pointer rounded-full h-36 w-36 md:h-48 md:w-48"
+                onClick={
+                  profileData.image ? handleImageDelete : handleFileInputClick
+                }
+              >
                 {profileData.image ? (
                   <Trash className="text-gray-50/70 cursor-pointer text-3xl" />
                 ) : (
@@ -129,7 +190,14 @@ const ProfilePage = () => {
                 )}
               </div>
             )}
-            {/* <input type="text" /> */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              className="hidden"
+              name="profile-image"
+              accept=".jpeg, .png, .svg, .jpg, .webp"
+            />
           </div>
           <div className="flex flex-col min-w-64 md:min-w-64 gap-5 text-white items-center justify-center">
             <div className="w-full">
