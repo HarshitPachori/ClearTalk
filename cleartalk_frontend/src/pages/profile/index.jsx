@@ -94,6 +94,7 @@ const ProfilePage = () => {
           formData,
           { withCredentials: true }
         );
+        console.log(userInfo);
         if (response.status === 200 && response.data.image) {
           setUserInfo({ ...userInfo, image: response.data.image });
           toast.success("Profile pic updated successfully.");
@@ -101,6 +102,7 @@ const ProfilePage = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        console.log({error});
         toast.error(error.response.data);
       }
     }
