@@ -94,6 +94,7 @@ const ProfilePage = () => {
           formData,
           { withCredentials: true }
         );
+        console.log(userInfo);
         if (response.status === 200 && response.data.image) {
           setUserInfo({ ...userInfo, image: response.data.image });
           toast.success("Profile pic updated successfully.");
@@ -101,6 +102,7 @@ const ProfilePage = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        console.log({error});
         toast.error(error.response.data);
       }
     }
@@ -140,10 +142,10 @@ const ProfilePage = () => {
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex flex-col items-center justify-center gap-10">
-      <div className="flex flex-col gap-10 w-[80vw] md:w-max">
+      <div className="flex flex-col gap-10 w-[80vw] md:w-max  shadow-md rounded-2xl shadow-slate-950 bg-black/50 px-5 md:px-10 py-8 md:py-10 ">
         <div className="">
           <ArrowLeft
-            className="text-4xl lg:text-6xl text-white/90 cursor-pointer"
+            className="text-4xl lg:text-6xl text-white/70 cursor-pointer"
             onClick={handleNavigateBackBtn}
           />
         </div>
