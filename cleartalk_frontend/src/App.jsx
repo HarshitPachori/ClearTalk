@@ -83,7 +83,8 @@ const App = () => {
         setLoading(false);
       }
     };
-    if (!userInfo) {
+   
+    if (!userInfo && userInfo !== null) {
       getUserData();
     } else {
       setLoading(false);

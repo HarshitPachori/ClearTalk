@@ -5,19 +5,39 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { apiClient } from "@/lib/api-client";
 import { getColor } from "@/lib/utils";
 import { useAppStore } from "@/store";
-import { BASE_URL } from "@/utils/constants";
+import { BASE_URL, LOGOUT_ROUTE } from "@/utils/constants";
+import axios from "axios";
 import { Pencil, Power } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ProfileInfo = () => {
-  const { userInfo } = useAppStore();
+  const { userInfo, setUserInfo } = useAppStore();
   const navigate = useNavigate();
-  const logoutHandler = async () => {};
+  const logoutHandler = async () => {
+    try {
+      const response = await apiClient.post(
+        LOGOUT_ROUTE,
+        {},
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        setUserInfo(null);
+        toast.success(response.data);
+        navigate("/auth");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response.data);
+      }
+    }
+  };
   return (
-    <div className="absolute bottom-0 h-16 flex items-center justify-between px-10 w-full bg-[#2a2b33]">
+    <div className="absolute bottom-0 h-16 md:h-[90px] flex items-center justify-between px-10 w-full bg-[#2a2b33]">
       <div className="flex items-center justify-center gap-3">
         <div className="w-12 h-12 relative ">
           <Avatar className="h-12 w-12 rounded-full overflow-hidden">

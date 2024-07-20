@@ -10,7 +10,7 @@ export const verifyJwtToken = async (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
     if (err) {
-      return response.status(403).send("Token is not valid");
+      return res.status(403).send("Token is not valid");
     }
     req.userId = payload.userId;
     next();
