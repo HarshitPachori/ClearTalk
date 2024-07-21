@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/AuthRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
+import contactRoutes from "./routes/ContactRoutes.js";
 
 dotenv.config({
   path: "./.env",
@@ -28,6 +29,7 @@ app.use("/uploads/profiles", express.static("uploads/profiles")); // for storing
 app.use("/api/auth", authRoutes);
 
 app.use("/api/user", userRoutes);
+app.use("/api/contacts", contactRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running...");
