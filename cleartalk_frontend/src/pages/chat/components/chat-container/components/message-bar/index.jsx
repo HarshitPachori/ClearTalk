@@ -3,16 +3,67 @@ import EmojiPicker from "emoji-picker-react";
 import { Image, Paperclip, SendHorizonal, Sticker } from "lucide-react";
 import { useAppStore } from "@/store";
 import { useSocket } from "@/context/SocketContext";
+import axios from "axios";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { UPLOAD_FILE_ROUTE } from "@/utils/constants";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const emojiRef = useRef();
+  const fileInputRef = useRef();
   const socket = useSocket();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
-  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
+  const {
+    selectedChatType,
+    selectedChatData,
+    userInfo,
+    setIsUploading,
+    setFileUploadProgress,
+  } = useAppStore();
 
   const handleAddEmoji = (emoji) => {
     setMessage((msg) => msg + emoji.emoji);
+  };
+
+  const handleAttachMentClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleAttachmentChange = async (event) => {
+    try {
+      const file = event.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        setIsUploading(true);
+        const response = await apiClient.post(UPLOAD_FILE_ROUTE, formData, {
+          withCredentials: true,
+          onUploadProgress: (data) => {
+            setFileUploadProgress(Math.round(100 * data.loaded) / data.total);
+          },
+        });
+        if (response.status === 200) {
+          setIsUploading(false);
+          if (selectedChatType === "contact") {
+            socket.emit("sendMessage", {
+              sender: userInfo.id,
+              content: undefined,
+              recipient: selectedChatData._id,
+              messageType: "file",
+              fileUrl: response.data.filePath,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      setIsUploading(false);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response.data);
+      }
+    }
   };
 
   const handleSendMessage = async () => {
@@ -49,9 +100,18 @@ const MessageBar = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white transition-all duration-300">
+        <button
+          className="text-neutral-500 focus:border-none focus:outline-none focus:text-white transition-all duration-300"
+          onClick={handleAttachMentClick}
+        >
           <Paperclip />
         </button>
+        <input
+          type="file"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={handleAttachmentChange}
+        />
         <div className="relative">
           <button
             className="text-neutral-500 focus:border-none focus:outline-none focus:text-white transition-all duration-300"

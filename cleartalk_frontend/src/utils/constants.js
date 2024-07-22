@@ -18,6 +18,8 @@ export const DELETE_USER_PROFILE_PIC_ROUTE = `${USER_ROUTES}/delete-user-profile
 
 // Contact Routes
 export const SEARCH_CONTACTS_ROUTE = `${CONTACT_ROUTES}/search`;
+export const GET_ALL_CONTACTS_FOR_DM_ROUTE = `${CONTACT_ROUTES}/get-contacts-for-dm`;
 
 // Message Routes
 export const GET_ALL_MESSAGES_ROUTE = `${MESSAGE_ROUTES}/get-messages`;
+export const UPLOAD_FILE_ROUTE = `${MESSAGE_ROUTES}/upload-file`;
