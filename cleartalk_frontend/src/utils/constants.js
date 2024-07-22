@@ -22,3 +22,4 @@ export const GET_ALL_CONTACTS_FOR_DM_ROUTE = `${CONTACT_ROUTES}/get-contacts-for
 
 // Message Routes
 export const GET_ALL_MESSAGES_ROUTE = `${MESSAGE_ROUTES}/get-messages`;
+export const UPLOAD_FILE_ROUTE = `${MESSAGE_ROUTES}/upload-file`;
