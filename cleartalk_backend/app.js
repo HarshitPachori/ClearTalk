@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/AuthRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import contactRoutes from "./routes/ContactRoutes.js";
+import messageRoutes from "./routes/MessageRoutes.js";
 
 dotenv.config({
   path: "./.env",
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/user", userRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running...");
