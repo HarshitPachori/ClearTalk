@@ -1,15 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { Image, Paperclip, SendHorizonal, Sticker } from "lucide-react";
+import { useAppStore } from "@/store";
+import { useSocket } from "@/context/SocketContext";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const emojiRef = useRef();
+  const socket = useSocket();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
+
   const handleAddEmoji = (emoji) => {
     setMessage((msg) => msg + emoji.emoji);
   };
-  const handleSendMessage = async () => {};
+
+  const handleSendMessage = async () => {
+    if (selectedChatType === "contact") {
+      socket.emit("sendMessage", {
+        sender: userInfo.id,
+        content: message,
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined,
+      });
+    }
+  };
 
   useEffect(() => {
     const handleOutsideEmojiPickerClick = (event) => {
@@ -22,6 +38,7 @@ const MessageBar = () => {
       document.removeEventListener("mousedown", handleOutsideEmojiPickerClick);
     };
   }, [emojiRef]);
+
   return (
     <div className="h-[10vh] bg-[#1c1d25] flex items-center justify-center  px-8 mb-5 gap-6">
       <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
