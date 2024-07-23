@@ -7,12 +7,14 @@ import axios from "axios";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { UPLOAD_FILE_ROUTE } from "@/utils/constants";
+import { useTheme } from "@/context/ThemeContext";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const emojiRef = useRef();
   const fileInputRef = useRef();
   const socket = useSocket();
+  const { theme } = useTheme();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const {
     selectedChatType,
@@ -76,6 +78,7 @@ const MessageBar = () => {
         fileUrl: undefined,
       });
     }
+    setMessage("");
   };
 
   useEffect(() => {
@@ -133,7 +136,7 @@ const MessageBar = () => {
         </div>
       </div>
       <button
-        className="bg-[#8417ff] hover:bg-[#741bda] p-5 flex items-center justify-center rounded-md focus:border-none focus:outline-none focus:bg-[#741bda] focus:text-white transition-all duration-300"
+        className={`bg-color-${theme} hover:bg-color-${theme}-hover text-color-${theme} border-color-${theme} p-5 flex items-center justify-center rounded-md focus:border-none focus:outline-none focus:bg-color-${theme} focus:text-color-${theme} transition-all duration-300`}
         onClick={handleSendMessage}
       >
         <SendHorizonal />

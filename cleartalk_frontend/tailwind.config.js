@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx}",
   ],
   prefix: "",
   theme: {
@@ -17,6 +17,28 @@ module.exports = {
       },
     },
     extend: {
+      backgroundColor: {
+        "color-theme1": "#ffffff",
+        "color-theme2": "#8d99ae",
+        "color-theme3": "#ef233c",
+        "color-theme4": "#c1c1c1",
+        "color-theme1-hover": "#fffff6",
+        "color-theme2-hover": "#8d99ac",
+        "color-theme3-hover": "#ef233b",
+        "color-theme4-hover": "#c1c1c1",
+      },
+      borderColor: {
+        "color-theme1": "#212121",
+        "color-theme2": "#212121",
+        "color-theme3": "#212121",
+        "color-theme4": "#212121",
+      },
+      textColor: {
+        "color-theme1": "#212121",
+        "color-theme2": "#212121",
+        "color-theme3": "#ffffff",
+        "color-theme4": "#212121",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -73,5 +95,20 @@ module.exports = {
       },
     },
   },
+  safelist: [
+    {
+      pattern: /text-color-(theme1|theme2|theme3|theme4)/,
+    },
+    {
+      pattern: /bg-color-(theme1|theme2|theme3|theme4)/,
+    },
+    {
+      pattern: /bg-color-(theme1|theme2|theme3|theme4)-hover/,
+      variants: ["hover"],
+    },
+    {
+      pattern: /border-color-(theme1|theme2|theme3|theme4)/,
+    },
+  ],
   plugins: [require("tailwindcss-animate")],
-}
+};

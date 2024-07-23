@@ -81,3 +81,15 @@
   font-weight: 500;
   font-style: normal;
 }
+
+@layer utilities {
+  .scrollbar-hidden::-webkit-scrollbar {
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+  }
+
+  .scrollbar-hidden {
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+  }
+}
