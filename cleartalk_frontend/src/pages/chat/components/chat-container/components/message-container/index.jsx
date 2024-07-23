@@ -4,6 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTheme } from "@/context/ThemeContext";
 import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
 import { BASE_URL, GET_ALL_MESSAGES_ROUTE } from "@/utils/constants";
@@ -18,6 +19,7 @@ const MessageContainer = () => {
 
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const { theme } = useTheme();
 
   const {
     selectedChatType,
@@ -75,7 +77,9 @@ const MessageContainer = () => {
         <div key={index}>
           {showDate && (
             <div className="text-center text-gray-500 my-2">
-              {moment(message.timestamp).format("LL")}
+              {moment(message.timestamp).format("LL") === moment().format("LL")
+                ? "Today"
+                : moment(message.timestamp).format("LL")}
             </div>
           )}
           {selectedChatType === "contact" && renderDMMessages(message)}
@@ -88,60 +92,96 @@ const MessageContainer = () => {
     <div
       className={`${
         message.sender === selectedChatData._id ? "text-left" : "text-right"
-      }`}
+      } relative`}
     >
       {message.messageType === "text" && (
-        <div
-          className={`${
-            message.sender !== selectedChatData._id
-              ? "bg-[#8417ff]/2 text-[#8417ff]/90 border-[#8417ff]/30"
-              : "bg-[#2a2b33]/2 text-white/80 border-white/20"
-          } border-2 inline-block p-4 rounded-lg my-1 max-w-[50%] break-words`}
-        >
-          {message.content}
-        </div>
+        <>
+          <div
+            className={`${
+              message.sender !== selectedChatData._id
+                ? // ? "bg-[#8417ff]/2 text-[#8417ff]/90 border-[#8417ff]/60"
+                  `bg-color-${theme} text-color-${theme} border-color-${theme}`
+                : `bg-color-${theme} text-color-${theme} border-color-${theme}`
+            } border-2 inline-block p-3 rounded-md my-1 max-w-[70%] break-words`}
+          >
+            {message.content}
+          </div>
+          <div
+            className={` ${
+              message.sender !== selectedChatData._id
+                ? "top-1 -right-1 rounded-br-full border-r-2 border-t-2"
+                : "top-1 -left-1  rounded-bl-full border-l-2 border-t-2"
+            } absolute h-[12px] w-2 bg-color-${theme} border-color-${theme}`}
+          ></div>
+        </>
       )}
 
       {message.messageType === "file" && (
         <div
           className={`${
             message.sender !== selectedChatData._id
-              ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-              : "bg-[#2a2b33]/5 text-white/80 border-white/20"
-          } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+              ? // ? "bg-[#8417ff]/2 text-[#8417ff]/90 border-[#8417ff]/60"
+                `bg-color-${theme} text-color-${theme} border-color-${theme}`
+              : `bg-color-${theme} text-color-${theme} border-color-${theme}`
+          } border-2 inline-block p-2 rounded-lg my-1 max-w-[70%] break-words`}
         >
           {checkIfImage(message.fileUrl) ? (
-            <div
-              className="cursor-pointer"
-              onClick={() => {
-                setShowImagePreview(true);
-                setImageUrl(message.fileUrl);
-              }}
-            >
-              <img
-                src={`${BASE_URL}/${message.fileUrl}`}
-                alt="uploaded image"
-                height={300}
-                width={300}
-              />
-            </div>
-          ) : (
-            <div className="flex  items-center justify-center gap-4">
-              <span className="text-white/80 text-3xl bg-black/20 rounded-full p-3 ">
-                <FolderArchive />
-              </span>
-              <span> {message.fileUrl.split("/").pop()}</span>
-              <button
-                className="bg-black/20 hover:bg-black/50 p-3 cursor-pointer text-2xl rounded-full transition-all duration-300"
-                onClick={() => downloadFileHandler(message.fileUrl)}
+            <>
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  setShowImagePreview(true);
+                  setImageUrl(message.fileUrl);
+                }}
               >
-                <Download />
-              </button>
-            </div>
+                <img
+                  src={`${BASE_URL}/${message.fileUrl}`}
+                  alt="uploaded image"
+                  height={300}
+                  width={300}
+                />
+              </div>
+              <div
+                className={` ${
+                  message.sender !== selectedChatData._id
+                    ? "top-1 -right-1 rounded-br-full border-r-2 border-t-2"
+                    : "top-1 -left-1  rounded-bl-full border-l-2 border-t-2"
+                } absolute h-[15px] w-3 bg-color-${theme} border-color-${theme}`}
+              ></div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-center gap-4">
+                <span className="text-white/80 text-3xl bg-black/50 rounded-lg p-3 ">
+                  <FolderArchive />
+                </span>
+                <span> {message.fileUrl.split("/").pop()}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger
+                      className="bg-black/50 hover:bg-black/50 p-3 cursor-pointer text-2xl rounded-full transition-all duration-300 text-white/80"
+                      onClick={() => downloadFileHandler(message.fileUrl)}
+                    >
+                      <Download />
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-[#1c1b1e] border-none text-white">
+                      Download
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div
+                className={` ${
+                  message.sender !== selectedChatData._id
+                    ? "top-1 -right-1 rounded-br-full border-r-2 border-t-2"
+                    : "top-1 -left-1  rounded-bl-full border-l-2 border-t-2"
+                } absolute h-[15px] w-3 bg-color-${theme} border-color-${theme}`}
+              ></div>
+            </>
           )}
         </div>
       )}
-      <div className="text-xs text-gray-600">
+      <div className="text-xs text-gray-500">
         {moment(message.timestamp).format("LT")}
       </div>
     </div>
