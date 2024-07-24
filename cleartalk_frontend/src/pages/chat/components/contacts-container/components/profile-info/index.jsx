@@ -198,23 +198,17 @@ const ProfileInfo = () => {
           <div className="border rounded-md px-2 py-5 flex flex-col gap-2">
             <div className="relative text-left">
               <div
-                className={`bg-color-${theme} bg-color-${theme}-hover border-color-${theme} text-color-${theme}  max-w-[70%] inline-block my-1 p-2 border-2 rounded-md z-10`}
+                className={`bg-color-${theme}-reciever-msg  text-color-${theme}-reciever-msg  max-w-[70%] inline-block my-1 p-2  rounded-b-full rounded-tr-full z-10`}
               >
                 Hi, I'm Reciever
               </div>
-              <div
-                className={`absolute  top-1 -left-1 h-3 w-2 bg-color-${theme} rounded-tr-sn rounded-bl-full border-l-2 border-t-2 border-color-${theme}`}
-              ></div>
             </div>
             <div className="relative text-right">
               <div
-                className={`bg-color-${theme} bg-color-${theme}-hover  max-w-[70%] inline-block text-color-${theme}  my-1 p-2 border-2 border-color-${theme} rounded-md`}
+                className={`bg-color-${theme}-sender-msg max-w-[70%] inline-block text-color-${theme}-sender-msg  my-1 p-2  rounded-b-full rounded-tl-full`}
               >
                 Hi, I'm Sender
               </div>
-              <div
-                className={`absolute  top-1 -right-1 h-3 w-2 bg-color-${theme} rounded-tl-sn rounded-br-full border-r-2 border-t-2 border-color-${theme}`}
-              ></div>
             </div>
           </div>
         </DialogContent>

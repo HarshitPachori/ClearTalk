@@ -76,7 +76,7 @@ const MessageContainer = () => {
       return (
         <div key={index}>
           {showDate && (
-            <div className="text-center text-gray-500 my-2">
+            <div className="text-center text-gray-400 my-2">
               {moment(message.timestamp).format("LL") === moment().format("LL")
                 ? "Today"
                 : moment(message.timestamp).format("LL")}
@@ -100,19 +100,12 @@ const MessageContainer = () => {
             className={`${
               message.sender !== selectedChatData._id
                 ? // ? "bg-[#8417ff]/2 text-[#8417ff]/90 border-[#8417ff]/60"
-                  `bg-color-${theme} text-color-${theme} border-color-${theme}`
-                : `bg-color-${theme} text-color-${theme} border-color-${theme}`
-            } border-2 inline-block p-3 rounded-md my-1 max-w-[70%] break-words`}
+                  `bg-color-${theme}-sender-msg text-color-${theme}-sender-msg rounded-tl-full`
+                : `bg-color-${theme}-reciever-msg text-color-${theme}-reciever-msg  rounded-tr-full`
+            }  inline-block p-3 rounded-b-full  my-1 max-w-[70%]  break-words`}
           >
             {message.content}
           </div>
-          <div
-            className={` ${
-              message.sender !== selectedChatData._id
-                ? "top-1 -right-1 rounded-br-full border-r-2 border-t-2"
-                : "top-1 -left-1  rounded-bl-full border-l-2 border-t-2"
-            } absolute h-[12px] w-2 bg-color-${theme} border-color-${theme}`}
-          ></div>
         </>
       )}
 
@@ -120,10 +113,10 @@ const MessageContainer = () => {
         <div
           className={`${
             message.sender !== selectedChatData._id
-              ? // ? "bg-[#8417ff]/2 text-[#8417ff]/90 border-[#8417ff]/60"
-                `bg-color-${theme} text-color-${theme} border-color-${theme}`
-              : `bg-color-${theme} text-color-${theme} border-color-${theme}`
-          } border-2 inline-block p-2 rounded-lg my-1 max-w-[70%] break-words`}
+              ? 
+                `bg-color-${theme}-sender-msg text-color-${theme}-sender-msg  rounded-tl-xl`
+              : `bg-color-${theme}-reciever-msg text-color-${theme}-reciever-msg `
+          } inline-block p-3 rounded-b-xl my-1 max-w-[70%] break-words`}
         >
           {checkIfImage(message.fileUrl) ? (
             <>
@@ -139,15 +132,9 @@ const MessageContainer = () => {
                   alt="uploaded image"
                   height={300}
                   width={300}
+                  className="rounded-md"
                 />
               </div>
-              <div
-                className={` ${
-                  message.sender !== selectedChatData._id
-                    ? "top-1 -right-1 rounded-br-full border-r-2 border-t-2"
-                    : "top-1 -left-1  rounded-bl-full border-l-2 border-t-2"
-                } absolute h-[15px] w-3 bg-color-${theme} border-color-${theme}`}
-              ></div>
             </>
           ) : (
             <>
@@ -170,18 +157,11 @@ const MessageContainer = () => {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <div
-                className={` ${
-                  message.sender !== selectedChatData._id
-                    ? "top-1 -right-1 rounded-br-full border-r-2 border-t-2"
-                    : "top-1 -left-1  rounded-bl-full border-l-2 border-t-2"
-                } absolute h-[15px] w-3 bg-color-${theme} border-color-${theme}`}
-              ></div>
             </>
           )}
         </div>
       )}
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-gray-300 mb-2">
         {moment(message.timestamp).format("LT")}
       </div>
     </div>
