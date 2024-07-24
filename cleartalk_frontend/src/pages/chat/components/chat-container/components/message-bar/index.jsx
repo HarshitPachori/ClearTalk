@@ -69,6 +69,10 @@ const MessageBar = () => {
   };
 
   const handleSendMessage = async () => {
+    if (!message || message === "") {
+      toast.error("Please write a message first.");
+      return;
+    }
     if (selectedChatType === "contact") {
       socket.emit("sendMessage", {
         sender: userInfo.id,
@@ -136,7 +140,7 @@ const MessageBar = () => {
         </div>
       </div>
       <button
-        className={`bg-color-${theme} hover:bg-color-${theme}-hover text-color-${theme} border-color-${theme} p-5 flex items-center justify-center rounded-md focus:border-none focus:outline-none focus:bg-color-${theme} focus:text-color-${theme} transition-all duration-300`}
+        className={`bg-gray-800 hover:bg-gray-700  p-5 flex items-center justify-center rounded-md focus:border-none focus:outline-none focus:bg-color-${theme} focus:text-color-${theme} transition-all duration-300`}
         onClick={handleSendMessage}
       >
         <SendHorizonal />
