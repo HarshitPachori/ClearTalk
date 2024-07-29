@@ -69,7 +69,6 @@ const App = () => {
         const response = await apiClient.get(GET_USER_INFO_ROUTE, {
           withCredentials: true,
         });
-        console.log(response);
         if (response.status === 200 && response.data.user.id) {
           setUserInfo(response.data.user);
         } else {

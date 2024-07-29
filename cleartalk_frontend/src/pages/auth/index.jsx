@@ -60,7 +60,6 @@ const AuthPage = () => {
   const handleLogin = async () => {
     if (validateLogin()) {
       try {
-        console.log(loginData);
         const response = await apiClient.post(
           LOGIN_ROUTE,
           {
@@ -69,7 +68,6 @@ const AuthPage = () => {
           },
           { withCredentials: true } // for storing jwt cookie
         );
-        console.log({ response });
         if (response.data.user.id) {
           setUserInfo(response.data.user);
           toast.success("Login successfully.");
@@ -79,7 +77,6 @@ const AuthPage = () => {
             navigate("/profile");
           }
         }
-        console.log({ response });
       } catch (error) {
         if (axios.isAxiosError(error)) {
           toast.error(error.response.data);
@@ -91,7 +88,6 @@ const AuthPage = () => {
   const handleSignup = async () => {
     if (validateSignup()) {
       try {
-        console.log(signupData);
         const response = await apiClient.post(
           SIGNUP_ROUTE,
           {
@@ -106,7 +102,6 @@ const AuthPage = () => {
           toast.success("Registered successfully.");
           navigate("/profile");
         }
-        console.log({ response });
       } catch (error) {
         if (axios.isAxiosError(error)) {
           toast.error(error.response.data);
