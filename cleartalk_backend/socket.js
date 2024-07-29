@@ -1,5 +1,6 @@
 import { Server as SocketIOServer } from "socket.io";
 import Message from "./models/MessageModel.js";
+import { decryptMessage } from "./utils/crypto.js";
 const setupSocket = (server) => {
   const io = new SocketIOServer(server, {
     cors: {
@@ -18,12 +19,29 @@ const setupSocket = (server) => {
     const messageData = await Message.findById(createdMessage._id)
       .populate("sender", "id email firstName lastName image color")
       .populate("recipient", "id email firstName lastName image color");
-
+    const decryptedMsg =
+      messageData.messageType === "text" && decryptMessage(messageData.content);
+    const decryptedUrl =
+      messageData.messageType === "file" && decryptMessage(messageData.fileUrl);
+    const msgData = {
+      ...messageData.toObject(),
+      content: decryptedMsg,
+    };
+    const urlData = {
+      ...messageData.toObject(),
+      fileUrl: decryptedUrl,
+    };
     if (recipientSocketId) {
-      io.to(recipientSocketId).emit("recieveMessage", messageData);
+      io.to(recipientSocketId).emit(
+        "recieveMessage",
+        messageData.messageType === "text" ? msgData : urlData
+      );
     }
     if (senderSocketId) {
-      io.to(senderSocketId).emit("recieveMessage", messageData);
+      io.to(senderSocketId).emit(
+        "recieveMessage",
+        messageData.messageType === "text" ? msgData : urlData
+      );
     }
   };
 
