@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { decryptMessage, encryptMessage } from "../utils/crypto.js";
 
 const messageSchema = new mongoose.Schema({
   sender: {
@@ -21,12 +22,14 @@ const messageSchema = new mongoose.Schema({
     required: function () {
       return this.messageType === "text";
     },
+    set: (msg) => encryptMessage(msg),
   },
   fileUrl: {
     type: String,
     required: function () {
       return this.messageType === "file";
     },
+    set: (url) => encryptMessage(url),
   },
   timestamp: {
     type: Date,
