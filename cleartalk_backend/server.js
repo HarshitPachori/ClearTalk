@@ -6,6 +6,9 @@ import setupSocket from "./socket.js";
 dotenv.config({
   path: "./.env",
 });
+
+export const SECRET_KEY = process.env.ENCRYPTION_SECRET_KEY;
+console.log(SECRET_KEY);
 connectDB()
   .then(() => {
     const port = process.env.PORT || 3000;

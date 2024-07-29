@@ -1,6 +1,5 @@
 import CryptoJS from "crypto-js";
-
-const SECRET_KEY = "a3b74d2cf7e9089452ce17499d407131";
+import { SECRET_KEY } from "../server.js";
 
 export const encryptMessage = (message) => {
   return CryptoJS.AES.encrypt(message, SECRET_KEY).toString();
