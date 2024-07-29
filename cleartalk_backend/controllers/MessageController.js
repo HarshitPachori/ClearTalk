@@ -1,5 +1,6 @@
 import Message from "../models/MessageModel.js";
 import { mkdirSync, renameSync } from "fs";
+import { decryptMessage } from "../utils/crypto.js";
 
 export const getMessages = async (req, res, next) => {
   try {
@@ -16,8 +17,23 @@ export const getMessages = async (req, res, next) => {
         { sender: user2, recipient: user1 },
       ],
     }).sort({ timestamp: 1 });
-
-    return res.status(200).json({ messages });
+    
+    const decryptedMessages = messages.map((msg) => {
+      if (msg.messageType === "text") {
+        const decryptedMsg = decryptMessage(msg.content);
+        return {
+          ...msg.toObject(),
+          content: decryptedMsg,
+        };
+      } else {
+        const decryptedUrl = decryptMessage(msg.fileUrl);
+        return {
+          ...msg.toObject(),
+          fileUrl: decryptedUrl,
+        };
+      }
+    });
+    return res.status(200).json({ messages: decryptedMessages });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");

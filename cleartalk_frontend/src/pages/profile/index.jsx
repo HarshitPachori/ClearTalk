@@ -45,7 +45,6 @@ const ProfilePage = () => {
   const saveChanges = async () => {
     if (validateProfile()) {
       try {
-        console.log(profileData);
         const response = await apiClient.put(
           UPDATE_USER_INFO_ROUTE,
           {
@@ -55,13 +54,11 @@ const ProfilePage = () => {
           },
           { withCredentials: true } // for storing jwt cookie
         );
-        console.log({ response });
         if (response.status === 200 && response.data.user.id) {
           setUserInfo(response.data.user);
           toast.success("Profile updated successfully.");
           navigate("/chat");
         }
-        console.log({ response });
       } catch (error) {
         if (axios.isAxiosError(error)) {
           toast.error(error.response.data);
@@ -85,7 +82,6 @@ const ProfilePage = () => {
   const handleImageChange = async (event) => {
     try {
       const file = event.target.files[0];
-      console.log({ file });
       if (file) {
         const formData = new FormData();
         formData.append("profile-image", file);
@@ -94,7 +90,6 @@ const ProfilePage = () => {
           formData,
           { withCredentials: true }
         );
-        console.log(userInfo);
         if (response.status === 200 && response.data.image) {
           setUserInfo({ ...userInfo, image: response.data.image });
           toast.success("Profile pic updated successfully.");
@@ -102,7 +97,6 @@ const ProfilePage = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log({error});
         toast.error(error.response.data);
       }
     }
@@ -114,13 +108,11 @@ const ProfilePage = () => {
         DELETE_USER_PROFILE_PIC_ROUTE,
         { withCredentials: true } // for storing jwt cookie
       );
-      console.log({ response });
       if (response.status === 200) {
         setUserInfo({ ...userInfo, image: null });
         toast.success(response.data);
         setProfileData({ ...profileData, image: null });
       }
-      console.log({ response });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response.data);
