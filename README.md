@@ -26,7 +26,6 @@ This project is a `real-time chatting application with end-to-end encyption of c
 
 ## Software and Tools required
 
-- JDK 17 or more
 - NodeJs
 - Git
 - MongoDB Cliet or Server
