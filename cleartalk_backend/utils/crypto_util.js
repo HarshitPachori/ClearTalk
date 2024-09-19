@@ -1,5 +1,10 @@
+import dotenv from "dotenv";
 import CryptoJS from "crypto-js";
-import { SECRET_KEY } from "../server.js";
+dotenv.config({
+  path: "./.env",
+});
+
+export const SECRET_KEY = process.env.ENCRYPTION_SECRET_KEY;
 
 export const encryptMessage = (message) => {
   return CryptoJS.AES.encrypt(message, SECRET_KEY).toString();
