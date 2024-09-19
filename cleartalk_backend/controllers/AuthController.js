@@ -27,7 +27,7 @@ export const signup = async (req, res, next) => {
       expires: cookieValidity,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      // sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
     return res.status(201).json({
       user: {
@@ -62,7 +62,7 @@ export const login = async (req, res, next) => {
       expires: cookieValidity,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      // sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
     return res.status(200).json({
       user: {
@@ -90,6 +90,7 @@ export const logout = async (req, res, next) => {
         expires: new Date(Date.now() + 1000),
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       }
     );
     return res.status(200).send("Log out successfully");
