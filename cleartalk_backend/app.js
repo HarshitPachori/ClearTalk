@@ -1,14 +1,22 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/AuthRoutes.js";
+import userRoutes from "./routes/UserRoutes.js";
+import contactRoutes from "./routes/ContactRoutes.js";
+import messageRoutes from "./routes/MessageRoutes.js";
+
+dotenv.config({
+  path: "./.env",
+});
 
 const app = express();
 
 app.use(
   cors({
     origin: [process.env.ORIGIN],
-    methods: ["*"],
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
     credentials: true,
   })
 );
@@ -17,10 +25,27 @@ app.use(cookieParser());
 
 app.use(express.json());
 
+// app.use("/uploads/profiles", express.static("uploads/profiles")); // for storing files on server
+// app.use("/uploads/files", express.static("uploads/files")); // for storing files on server
+
+app.use("/api/auth", authRoutes);
+
+app.use("/api/user", userRoutes);
+app.use("/api/contacts", contactRoutes);
+app.use("/api/messages", messageRoutes);
+
 app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
-app.use("/api/auth", authRoutes);
+// global error handler
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({
+    statusCode: err.statusCode || 500,
+    message: err.message || "Internal Server Error",
+    errors: err.errors || [],
+    success: false,
+  });
+});
 
 export { app };

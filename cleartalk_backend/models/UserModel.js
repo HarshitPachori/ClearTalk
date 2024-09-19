@@ -19,7 +19,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  image: {
+  imageUrl: {
+    type: String,
+    required: false,
+  },
+  cloudinaryPublicId: {
     type: String,
     required: false,
   },
@@ -35,6 +39,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next(); // Skip hashing if password is not modified
+  }
   const salt = await genSalt(10);
   this.password = await hash(this.password, salt);
   next();
