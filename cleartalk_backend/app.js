@@ -25,8 +25,8 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.use("/uploads/profiles", express.static("uploads/profiles")); // for storing files on server
-app.use("/uploads/files", express.static("uploads/files")); // for storing files on server
+// app.use("/uploads/profiles", express.static("uploads/profiles")); // for storing files on server
+// app.use("/uploads/files", express.static("uploads/files")); // for storing files on server
 
 app.use("/api/auth", authRoutes);
 

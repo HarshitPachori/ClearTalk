@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { decryptMessage, encryptMessage } from "../utils/crypto.js";
+import { decryptMessage, encryptMessage } from "../utils/crypto_util.js";
 
 const messageSchema = new mongoose.Schema({
   sender: {
@@ -30,6 +30,18 @@ const messageSchema = new mongoose.Schema({
       return this.messageType === "file";
     },
     set: (url) => encryptMessage(url),
+  },
+  originalFileName: {
+    type: String,
+    required: false,
+  },
+  fileFormat: {
+    type: String,
+    required: false,
+  },
+  cloudinaryPublicId: {
+    type: String,
+    required: false,
   },
   timestamp: {
     type: Date,

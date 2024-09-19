@@ -56,6 +56,9 @@ const MessageBar = () => {
               recipient: selectedChatData._id,
               messageType: "file",
               fileUrl: response.data.filePath,
+              cloudinaryPublicId: response.data.publicId,
+              originalFileName: response.data.originalFileName,
+              fileFormat: response.data.fileFormat,
             });
           }
         }

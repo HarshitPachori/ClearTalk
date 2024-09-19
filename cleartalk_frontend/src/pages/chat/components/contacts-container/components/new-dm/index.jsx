@@ -40,6 +40,8 @@ const NewDM = () => {
           { withCredentials: true }
         );
         if (response.status === 200 && response.data.contacts) {
+          console.log({ res: response.data });
+
           setSearchContacts(response.data.contacts);
         }
       } else {
@@ -103,9 +105,9 @@ const NewDM = () => {
                   >
                     <div className="w-12 h-12 relative ">
                       <Avatar className="h-12 w-12 rounded-full overflow-hidden">
-                        {contact.image ? (
+                        {contact.imageUrl ? (
                           <AvatarImage
-                            src={`${BASE_URL}/${contact.image}`}
+                            src={contact.imageUrl}
                             alt="profile"
                             className="object-cover w-full h-full bg-black rounded-full"
                           />

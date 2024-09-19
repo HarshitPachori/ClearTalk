@@ -41,7 +41,7 @@ const MessageContainer = () => {
     try {
       setIsDownloading(true);
       setFileDownloadProgress(0);
-      const response = await apiClient.get(`${BASE_URL}/${fileUrl}`, {
+      const response = await apiClient.get(fileUrl, {
         withCredentials: true,
         responseType: "blob",
         onDownloadProgress: (data) => {
@@ -113,27 +113,29 @@ const MessageContainer = () => {
         <div
           className={`${
             message.sender !== selectedChatData._id
-              ? 
-                `bg-color-${theme}-sender-msg text-color-${theme}-sender-msg  rounded-tl-xl`
+              ? `bg-color-${theme}-sender-msg text-color-${theme}-sender-msg  rounded-tl-xl`
               : `bg-color-${theme}-reciever-msg text-color-${theme}-reciever-msg `
           } inline-block p-3 rounded-b-xl my-1 max-w-[70%] break-words`}
         >
           {checkIfImage(message.fileUrl) ? (
             <>
               <div
-                className="cursor-pointer"
+                className="cursor-pointer text-center"
                 onClick={() => {
                   setShowImagePreview(true);
                   setImageUrl(message.fileUrl);
                 }}
               >
                 <img
-                  src={`${BASE_URL}/${message.fileUrl}`}
+                  src={message.fileUrl}
                   alt="uploaded image"
                   height={300}
                   width={300}
                   className="rounded-md"
                 />
+                <span className="text-center font-semibold w-full">
+                  {message.originalFileName}
+                </span>
               </div>
             </>
           ) : (
@@ -142,7 +144,10 @@ const MessageContainer = () => {
                 <span className="text-white/80 text-3xl bg-black/50 rounded-lg p-3 ">
                   <FolderArchive />
                 </span>
-                <span> {message.fileUrl.split("/").pop()}</span>
+                <iframe
+                  src={`https://docs.google.com/viewer?url=${message.fileUrl}&embedded=true`}
+                ></iframe>
+                <span> {message.originalFileName}</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger
@@ -206,7 +211,7 @@ const MessageContainer = () => {
         <div className="fixed top-0 left-0 z-[1000] h-[100vh] w-[100vw] backdrop-blur-md flex items-center justify-center">
           <div>
             <img
-              src={`${BASE_URL}/${imageUrl}`}
+              src={imageUrl}
               alt=""
               className="h-[80vh] w-full object-contain rounded-md"
             />

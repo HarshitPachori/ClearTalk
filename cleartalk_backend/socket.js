@@ -1,6 +1,6 @@
 import { Server as SocketIOServer } from "socket.io";
 import Message from "./models/MessageModel.js";
-import { decryptMessage } from "./utils/crypto.js";
+import { decryptMessage } from "./utils/crypto_util.js";
 const setupSocket = (server) => {
   const io = new SocketIOServer(server, {
     cors: {

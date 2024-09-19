@@ -127,7 +127,7 @@ const ProfilePage = () => {
         firstName: userInfo.firstName,
         lastName: userInfo.lastName,
         selectedColor: userInfo.color,
-        image: userInfo.image ? `${BASE_URL}/${userInfo.image}` : null,
+        image: userInfo.image ? userInfo.image : null,
       });
     }
   }, [userInfo]);

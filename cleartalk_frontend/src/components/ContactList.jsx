@@ -14,6 +14,8 @@ const ContactList = ({ contacts, isChannel = false }) => {
     setSelectedChatMessages,
   } = useAppStore();
 
+  console.log({ contact: contacts[0] });
+
   const { theme } = useTheme();
 
   const handleClick = (contact) => {
@@ -47,7 +49,7 @@ const ContactList = ({ contacts, isChannel = false }) => {
               <Avatar className="h-10 w-10 rounded-full overflow-hidden">
                 {contact.image ? (
                   <AvatarImage
-                    src={`${BASE_URL}/${contact.image}`}
+                    src={contact.image}
                     alt="profile"
                     className="object-cover w-full h-full bg-black"
                   />

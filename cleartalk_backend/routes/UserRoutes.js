@@ -9,7 +9,9 @@ import {
 import multer from "multer";
 
 const userRoutes = Router();
-const upload = multer({ dest: "uploads/profiles/" });
+// const upload = multer({ dest: "uploads/profiles/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 userRoutes.get("/user-info", verifyJwtToken, getUserInfo);
 userRoutes.put("/update-user-info", verifyJwtToken, updateUserInfo);
