@@ -1,4 +1,4 @@
-# ClearTalk - A Chat Application
+# `Clear Talk - A Realtime Chat Application`
 
 This project is a `real-time chatting application with end-to-end encyption of chat messages and files` by which a registered user can chat with their friends and relatives , send emoji's & files to them also, can download shared files also. With a robust Backend in `Node Js` and `Express Js` & visualy appealing user interface or Frontend in `ReactJs` , with `Zustand` for state management , `Javascript` , `TailwindCSS` and `Shadcn-ui` for overall better user experience and easyness, we have developed this application.
 
